@@ -1,0 +1,26 @@
+services:
+  auth-service:
+    build: ./auth-service
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+    volumes:
+      - auth-data:/data
+
+  student-service:
+    build: ./student-service
+    environment:
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+    volumes:
+      - student-data:/data
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "8080:80"
+    depends_on:
+      - auth-service
+      - student-service
+
+volumes:
+  auth-data:
+  student-data:
